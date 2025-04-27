@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Instagram Block Command</title>
+</head>
+<body>
+    <h2>Copy This Command:</h2>
+    <textarea id="cmd" rows="4" cols="100" readonly>
+(for %i in (instagram.com www.instagram.com m.instagram.com) do @echo 127.0.0.1 %i)>>%SystemRoot%\System32\drivers\etc\hosts
+    </textarea>
+    <br><br>
+    <button onclick="copyCmd()">Copy Command</button>
+
+    <script>
+    function copyCmd() {
+        var copyText = document.getElementById("cmd");
+        copyText.select();
+        document.execCommand("copy");
+        alert("Command Copied! Paste it in CMD (Run as Admin)");
+    }
+    </script>
+</body>
+</html>
