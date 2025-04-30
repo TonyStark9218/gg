@@ -1,24 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Instagram Block Command</title>
+  <meta charset="UTF-8">
+  <title>Instagram Block/Unblock</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 8px 16px;
+      margin-bottom: 30px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <h2>Copy This Command:</h2>
-    <textarea id="cmd" rows="4" cols="100" readonly>
-(for %i in (instagram.com www.instagram.com m.instagram.com) do @echo 127.0.0.1 %i)>>%SystemRoot%\System32\drivers\etc\hosts
-    </textarea>
-    <br><br>
-    <button onclick="copyCmd()">Copy Command</button>
+  <h2>🔒 Instagram Block Command</h2>
+  <textarea id="blockCmd" readonly>
+(for %i in (instagram.com www.instagram.com m.instagram.com) do (
+    powershell -Command "if (!(Test-Path -Path $env:SystemRoot\System32\drivers\etc\hosts)) { New-Item -ItemType File -Path $env:SystemRoot\System32\drivers\etc\hosts -Force | Out-Null }; Add-Content -Path $env:SystemRoot\System32\drivers\etc\hosts -Value '127.0.0.1 %i'"
+))
+  </textarea>
+  <button onclick="copy('blockCmd')">Copy Block Command</button>
 
-    <script>
-    function copyCmd() {
-        var copyText = document.getElementById("cmd");
-        copyText.select();
-        document.execCommand("copy");
-        alert("Command Copied! Paste it in CMD (Run as Admin)");
+  <h2>🔓 Instagram Unblock Command</h2>
+  <textarea id="unblockCmd" readonly>
+powershell -Command "if (Test-Path $env:SystemRoot\System32\drivers\etc\hosts) { (Get-Content $env:SystemRoot\System32\drivers\etc\hosts) | Where-Object {$_ -notmatch 'instagram\.com'} | Set-Content $env:SystemRoot\System32\drivers\etc\hosts }"
+  </textarea>
+  <button onclick="copy('unblockCmd')">Copy Unblock Command</button>
+
+  <script>
+    function copy(id) {
+      const text = document.getElementById(id);
+      text.select();
+      document.execCommand("copy");
+      alert("Command copied! Paste in CMD (Run as Admin)");
     }
-    </script>
+  </script>
 </body>
 </html>
