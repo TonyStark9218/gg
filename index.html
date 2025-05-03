@@ -63,6 +63,8 @@
             font-weight: 500;
             border-radius: 8px;
             transition: background 0.3s ease, transform 0.2s ease;
+            margin: 5px;
+            cursor: pointer;
         }
 
         .btn:hover {
@@ -72,6 +74,10 @@
 
         .btn:active {
             transform: translateY(0);
+        }
+
+        input[type="file"] {
+            margin-bottom: 16px;
         }
 
         @keyframes fadeIn {
@@ -103,16 +109,45 @@
     <div class="container">
         <div class="icon">🛑</div>
         <h1>Access Denied</h1>
-        <p>This site has been blocked by WebGuard. Contact your administrator or check your blocklist settings via Telegram to unblock it.</p>
+        <p id="blockedMsg">This site has been blocked by WebGuard. Contact your administrator or check your blocklist settings via Telegram to unblock it.</p>
+
+        <!-- File Upload Section -->
+        <form id="zipForm">
+            <input type="file" id="zipFile" accept=".zip" />
+            <br>
+            <button type="submit" class="btn">Download Selected Zip</button>
+        </form>
+
         <a href="https://www.google.com" class="btn">Go to Google</a>
     </div>
+
     <script>
-        // Optional: Add dynamic URL to message (if passed via query param)
+        // Show blocked site message if URL param exists
         const urlParams = new URLSearchParams(window.location.search);
         const blockedUrl = urlParams.get('url');
         if (blockedUrl) {
-            document.querySelector('p').innerText = `The site "${blockedUrl}" has been blocked by WebGuard. Contact your administrator or check your blocklist settings via Telegram to unblock it.`;
+            document.getElementById('blockedMsg').innerText = `The site "${blockedUrl}" has been blocked by WebGuard. Contact your administrator or check your blocklist settings via Telegram to unblock it.`;
         }
+
+        // Handle zip file download
+        document.getElementById('zipForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('zipFile');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('Please select a ZIP file first.');
+                return;
+            }
+
+            const url = URL.createObjectURL(file);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = file.name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
     </script>
 </body>
 </html>
